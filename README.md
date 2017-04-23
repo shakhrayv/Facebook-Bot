@@ -12,5 +12,5 @@ The **Facebook Bot for Facebook Messenger** helps you organize and analyze any k
 * **```/download <LINK>```**<br>Download text from **```<LINK>```**<br><br>
 * **```/word_count```**<br>Count the number of words<br><br>
 * **```/sym_count```**<br>Count the number of symbols<br><br>
-* **```/word_freq <TOP>```**<br>Get **```<TOP>``` ** most frequent words<br><br>
-* **```/sym_freq <TOP>```**<br>Get **```<TOP>``` ** most frequent symbols<br><br>
+* **```/word_freq <TOP>```**<br>Get **```<TOP>```** most frequent words<br><br>
+* **```/sym_freq <TOP>```**<br>Get **```<TOP>```** most frequent symbols<br><br>
