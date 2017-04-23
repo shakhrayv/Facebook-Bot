@@ -1,8 +1,9 @@
-from flask import Flask, request
 import requests
-import nltk
+from flask import Flask, request
+from bot import Bot
 
 app = Flask(__name__)
+bot = Bot()
 
 ACCESS_TOKEN = "EAAKt8AcCHZCgBAHbCLyynWUrmkzduHXUZCykMfNIjIFRwag8C2X6XWh7mculY8bFd3boT67gxHSAC2GU8LaLh8LeV79TL7o4EB11Cj4Ii8KRUOp35Q76X4Ad2OZALHOm7DsOJZBhm6xplsrTQFjRgqJaMb0tzmbhWlAAVlYYfAZDZD"
 
@@ -20,14 +21,25 @@ def reply(user_id, msg):
     print(resp.content)
 
 
+def quit(user_id):
+    reply(user_id, 'Bye!')
+    exit(0)
+
+
 @app.route('/', methods=['POST'])
 def handle_incoming_messages():
     data = request.json
     print(data)
-    sender = data['entry'][0]['messaging'][0]['sender']['id']
-    message = data['entry'][0]['messaging'][0]['message']['text']
+    message_info = data['entry'][0]['messaging'][0]
+    sender = message_info['sender']['id']
 
-    reply(sender, "твоя мама " + adjs[randint(0,2)] + " шлюха")
+    if 'sticker_id' in message_info['message'] and message_info['message']['sticker_id'] == 369239263222822:
+        reply(sender, "^_^")
+        return 'ok'
+
+    command = message_info['message']['text']
+    response = bot.execute(command)
+    reply(sender, response)
 
     return "ok"
 
