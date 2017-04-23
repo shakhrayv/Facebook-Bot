@@ -8,8 +8,9 @@ The **Facebook Bot for Facebook Messenger** helps you organize and analyze any k
 ### Requirements
 1. Python 3.4.1 or later
 > Note: the bot was tested using Python 3.6.0
-2. [nltk](http://www.nltk.org/install.html) and [nltk data](http://www.nltk.org/data.html)
-3. [ngrok](https://ngrok.com/download)
+2. Python modules: [Flask](http://flask.pocoo.org) and [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/#Download)
+3. [nltk](http://www.nltk.org/install.html) and [nltk data](http://www.nltk.org/data.html)
+4. [ngrok](https://ngrok.com/download)
 
 ### Usage
 ##### The bot accepts the following commands:
