@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 word_tokenizer = RegexpTokenizer(r'\w+')
 
+
 class Bot:
     def __init__(self):
         print("INITIALIZED")
