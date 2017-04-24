@@ -24,4 +24,5 @@ The **Facebook Bot for Facebook Messenger** helps you organize and analyze any k
 * **```/word_freq <TOP>```**<br>Get **```<TOP>```** most frequent words<br><br>
 * **```/sym_freq <TOP>```**<br>Get **```<TOP>```** most frequent symbols<br><br>
 * **```/exit```**  and **```/quit```**<br>Quit bot<br><br>
+* **```/save_all```**<br>Saves all articles for the next session<br><br>
 * **```/help```**<br>Echo help<br><br>
