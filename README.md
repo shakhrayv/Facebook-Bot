@@ -13,11 +13,8 @@ The **Facebook Bot for Facebook Messenger** helps you organize and analyze any k
 4. [ngrok](https://ngrok.com/download)
 
 ### Usage
-
-The bot accepts the commands as a Facebook Messenger message.<br>
-The following commands are available:
-
-* **```/text <STRING>```**  <br> Add the **```<STRING>```** parameter as a text<br><br>
+##### The bot accepts the following commands:
+* **```/text <STRING>```**  <br> Add the **```<STRING>```** parameter as a text<br><br>
 * **```/save <TITLE>```**<br>Save the current text with the **```<TITLE>```** for current user<br><br>
 * **```/share <TITLE>```**<br>Shared the text with **```<TITLE>```** with all users<br><br>
 * **```/load <TITLE>```**<br>Load the text with title **```<TITLE>```** for current user<br><br>
