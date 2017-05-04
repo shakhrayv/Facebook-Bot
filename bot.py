@@ -4,9 +4,10 @@ from nltk.tokenize import RegexpTokenizer
 from bs4 import BeautifulSoup
 from translation_api import *
 
-
+# Private keys
 yandex_api_key = 'trnsl.1.1.20170504T161543Z.1ce6778cb7154603.5f9dbe3d943c4486d33bf509831868ce1f10bdc8'
 word_tokenizer = RegexpTokenizer(r'\w+')
+
 
 def prettify(array):
     text = ''
