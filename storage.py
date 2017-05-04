@@ -24,6 +24,7 @@ class Storage:
     def save_text(self, sender, text, title="Untitled"):
         self.auth(sender)
         self.data[sender][title] = text
+        self.save()
 
     def load_text(self, sender, title):
         self.auth(sender)
@@ -36,6 +37,7 @@ class Storage:
         if title in self.data[sender].keys():
             for s in self.data.keys():
                 self.data[s][title] = self.data[sender][title]
+        self.save()
 
     def titles(self, sender):
         self.auth(sender)

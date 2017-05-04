@@ -9,12 +9,15 @@ yandex_api_key = 'trnsl.1.1.20170504T161543Z.1ce6778cb7154603.5f9dbe3d943c4486d3
 word_tokenizer = RegexpTokenizer(r'\w+')
 
 
-def prettify(array):
+def prettify(array, top):
     text = ''
+    elements = 0
     for elem in array:
-        print(elem)
-        if elem[0] == '' or elem[0] == '\n':
+        if elements == top:
+            return text
+        if elem[0] == '' or elem[0] == ' ' or elem[0] == '\n':
             continue
+        elements += 1
         text += elem[0].ljust(10) + " -> " + str(elem[1])
         text += '\n'
     return text
@@ -101,7 +104,7 @@ class Bot:
                     top = int(top_word)
                 except ValueError:
                     pass
-            yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top))
+            yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top + 3), top)
 
         elif cmd == '/get_text':
             if self.text == '':
@@ -126,7 +129,7 @@ class Bot:
                 yield "The title cannot be empty."
                 return
             self.storage.share_text(sender, words[1])
-            yield "Shared."
+            yield "Shared " + "'" + words[1] + "'"
 
         elif cmd == '/load':
             words = message.split()
@@ -158,7 +161,7 @@ class Bot:
                 return
             try:
                 translation = self.translation_engine.translate(self.text, lang)
-                self.text = translation
+                self.text = translation['text'][0]
                 yield translation['text'][0]
             except YandexTranslateException:
                 yield "Translation error occurred."
@@ -177,37 +180,37 @@ class Bot:
 /text <STRING>  
 Add the <STRING> parameter as a text
 
- /download <LINK>
+/download <LINK>
 Download text from <LINK>
 
- /translate <LANG>
+/translate <LANG>
 Translate current text into <LANG> language
 
- /languages
+/languages
 Show available languages
 
- /save <TITLE>
+/save <TITLE>
 Save the current text with the <TITLE> for current user
 
- /share <TITLE>
+/share <TITLE>
 Shared the text with <TITLE> with all users
 
- /load <TITLE>
+/load <TITLE>
 Load the text with title <TITLE> for current user
 
- /save_all
+/save_all
 Saves all articles for the next session
 
- /word_count
+/word_count
 Count the number of words
 
- /sym_count
+/sym_count
 Count the number of symbols
 
- /word_freq <TOP>
+/word_freq <TOP>
 Get <TOP> most frequent words
 
- /sym_freq <TOP>
+/sym_freq <TOP>
 Get <TOP> most frequent symbols
  '''
 
