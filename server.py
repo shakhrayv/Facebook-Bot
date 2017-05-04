@@ -1,51 +1,103 @@
+# Useful imports
 import requests
 from flask import Flask, request
-from bot import Bot
+import json
 import time
+from multiprocessing import Process
+from bot import Bot
+from random import randint
 
-app = Flask(__name__)
-bot = Bot()
 
+# Facebook Configurations
 ACCESS_TOKEN = "EAAKt8AcCHZCgBAHbCLyynWUrmkzduHXUZCykMfNIjIFRwag8C2X6XWh7mculY8bFd3boT67gxHSAC2GU8LaLh8LeV79TL7o4EB11Cj4Ii8KRUOp35Q76X4Ad2OZALHOm7DsOJZBhm6xplsrTQFjRgqJaMb0tzmbhWlAAVlYYfAZDZD"
+VER_SCT = "YKIZr)*FCZSO@[mTS/eW"
+
+app = Flask(__name__)   # Creating Flask application
+bot = Bot()             # Creating a bot instance
 
 
+# Handling verification
 @app.route('/', methods=['GET'])
 def handle_verification():
-    return request.args['hub.challenge']
+    print("Handling Verification...")
+
+    if request.args.get('hub.verify_token', '') == VER_SCT:
+        print("Verification successful!")
+        return request.args.get('hub.challenge', '')
+    else:
+        print("Verification failed!")
+        return 'Error, wrong validation token.'
 
 
-def reply(user_id, msges):
-    for msg in msges:
-        data = {
-            "recipient": {"id": user_id},
-            "message": {"text": msg}
-        }
-        resp = requests.post("https://graph.facebook.com/v2.6/me/messages?access_token=" + ACCESS_TOKEN, json=data)
-        print(resp.content)
+# Getting user info
+def get_user_info(token, user_id):
+    r = requests.get("https://graph.facebook.com/v2.6/" + user_id,
+                     params={"fields": "first_name,last_name", "access_token": token })
+    if r.status_code != requests.codes.ok:
+        print(r.text)
+    return json.loads(r.content)
 
 
+# Sending a message with 'text' to the recipient
+def send_message(recipient, text):
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+        params={"access_token": ACCESS_TOKEN},
+        data=json.dumps({
+            "recipient": {"id": recipient},
+            "message": {"text": text}
+            }),
+        headers={'Content-type': 'application/json'})
+    if r.status_code != requests.codes.ok:
+        print(r.text)
+
+
+# This method will be called every time the message is received
 @app.route('/', methods=['POST'])
 def handle_incoming_messages():
-    data = request.json
-    print(data)
-    message_info = data['entry'][0]['messaging'][0]
-    sender = message_info['sender']['id']
+    # Getting the request data
+    payload = request.get_data()
 
-    if 'sticker_id' in message_info['message'] and message_info['message']['sticker_id'] == 369239263222822:
-        reply(sender, ["^_^"])
-        return 'ok'
+    for sender, message in messaging_events(payload):
 
-    command = message_info['message']['text']
-    response = bot.execute(command, sender)
+        # In some cases, the message can be empty
+        # In other cases, the 'sender' field may be absent
+        if sender is None:
+            continue
+        elif message is None:
+            send_message(sender, '^_^')
+            continue
 
-    if type(response) == str:
-        response = [response]
-    if type(response) == tuple and response[1] == True:
-        reply(sender, response[0])
+        # Trying to answer by calling 'bot.execute'
+        try:
+            for bot_message in bot.execute(message, sender, send_message):
+                if bot_message is not None:
+                    print(bot_message)
+                    send_message(sender, bot_message)
+        except Exception:
+            print("Unexpected error:", sys.exc_info()[0])
 
-    reply(sender, response)
     return "ok"
 
 
+# Parse incoming payload
+def messaging_events(payload):
+    data = json.loads(payload)
+
+    if 'entry' not in data or 'messaging' not in data['entry'][0]:
+        return
+
+    # Loading messages events
+    messages = data["entry"][0]["messaging"]
+
+    for event in messages:
+        # Checking if all the field are present
+        if "message" in event and "text" in event["message"]:
+            yield event["sender"]["id"], event["message"]["text"]
+        elif 'sender' in event:
+            yield event['sender']['id'], None
+
+
+# Main function
+# Launching Flask application
 if __name__ == '__main__':
     app.run(debug=True)

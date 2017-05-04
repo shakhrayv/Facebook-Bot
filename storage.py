@@ -37,6 +37,10 @@ class Storage:
             for s in self.data.keys():
                 self.data[s][title] = self.data[sender][title]
 
+    def titles(self, sender):
+        self.auth(sender)
+        return self.data[sender].keys()
+
     def clear(self, sender):
         self.auth(sender)
         self.data[sender] = {}
