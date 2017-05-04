@@ -173,58 +173,42 @@ class Bot:
 
         elif cmd == '/help':
             yield '''
+/text <STRING>  
+Add the <STRING> parameter as a text
 
-                    /text <STRING>  
-                    Add the <STRING> parameter as a text
+ /download <LINK>
+Download text from <LINK>
 
+ /translate <LANG>
+Translate current text into <LANG> language
 
-                     /download <LINK>
-                    Download text from <LINK>
+ /languages
+Show available languages
 
+ /save <TITLE>
+Save the current text with the <TITLE> for current user
 
-                     /translate <LANG>
-                    Translate current text into <LANG> language
+ /share <TITLE>
+Shared the text with <TITLE> with all users
 
+ /load <TITLE>
+Load the text with title <TITLE> for current user
 
-                     /languages
-                    Show available languages
+ /save_all
+Saves all articles for the next session
 
+ /word_count
+Count the number of words
 
-                     /save <TITLE>
-                    Save the current text with the <TITLE> for current user
+ /sym_count
+Count the number of symbols
 
+ /word_freq <TOP>
+Get <TOP> most frequent words
 
-                     /share <TITLE>
-                    Shared the text with <TITLE> with all users
-
-
-                     /load <TITLE>
-                    Load the text with title <TITLE> for current user
-
-
-                     /save_all
-                    Saves all articles for the next session
-
-
-                     /word_count
-                    Count the number of words
-
-
-                     /sym_count
-                    Count the number of symbols
-
-
-                     /word_freq <TOP>
-                    Get <TOP> most frequent words
-
-
-                     /sym_freq <TOP>
-                    Get <TOP> most frequent symbols
-
-
-                     /help
-                    Echo help
-                     '''
+ /sym_freq <TOP>
+Get <TOP> most frequent symbols
+ '''
 
         else:
             yield 'Command was not detected.\nType "/help" for more information.'
