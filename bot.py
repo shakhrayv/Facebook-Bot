@@ -8,6 +8,16 @@ from translation_api import *
 yandex_api_key = 'trnsl.1.1.20170504T161543Z.1ce6778cb7154603.5f9dbe3d943c4486d33bf509831868ce1f10bdc8'
 word_tokenizer = RegexpTokenizer(r'\w+')
 
+def prettify(array):
+    text = ''
+    for elem in array:
+        print(elem)
+        if elem[0] == '' or elem[0] == '\n':
+            continue
+        text += elem[0].ljust(10) + " -> " + str(elem[1])
+        text += '\n'
+    return text
+
 
 class Bot:
     def __init__(self):
@@ -56,11 +66,19 @@ class Bot:
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
                 return
-            yield str(nltk.FreqDist(nltk.Text(self.text)).most_common(10))
+            top = 5
+            words = message.split()
+            if len(words) > 1:
+                top_word = words[1]
+                try:
+                    top = int(top_word)
+                except ValueError:
+                    pass
+            yield prettify(nltk.FreqDist(nltk.Text(self.text)).most_common(top))
 
         elif cmd == '/download':
             link = message[len(cmd)+1:]
-            if 'http://' not in link and 'http://' not in link:
+            if 'http://' not in link and 'https://' not in link:
                 link = 'https://' + link
             try:
                 f = requests.get(link).text
@@ -70,12 +88,19 @@ class Bot:
             except:
                 yield 'An error occurred during the connection attempt.\nPlease try again.'
 
-
         elif cmd == '/word_freq':
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
                 return
-            yield str(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(5))
+            top = 5
+            words = message.split()
+            if len(words) > 1:
+                top_word = words[1]
+                try:
+                    top = int(top_word)
+                except ValueError:
+                    pass
+            yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top))
 
         elif cmd == '/get_text':
             if self.text == '':
@@ -87,28 +112,27 @@ class Bot:
             if self.text == '':
                 yield "Looks like I don't have any text!\nPrint 'help' for more information."
                 return
-            cmds = message.split()
-            if len(cmds) < 2:
+            words = message.split()
+            if len(words) < 2:
                 yield "The title cannot be empty."
                 return
-            self.storage.save_text(sender, self.text, cmds[1])
-            yield "Saved " + "'" + cmds[1] + "'"
+            self.storage.save_text(sender, self.text, words[1])
+            yield "Saved " + "'" + words[1] + "'"
 
         elif cmd == '/share':
-            cmds = message.split()
-            if len(cmds) < 2:
+            words = message.split()
+            if len(words) < 2:
                 yield "The title cannot be empty."
                 return
-            self.storage.share_text(sender, cmds[1])
+            self.storage.share_text(sender, words[1])
             yield "Shared."
 
-
         elif cmd == '/load':
-            cmds = message.split()
-            if len(cmds) < 2:
+            words = message.split()
+            if len(words) < 2:
                 yield "The title cannot be empty."
                 return
-            t = self.storage.load_text(sender, cmds[1])
+            t = self.storage.load_text(sender, words[1])
             if len(t) < 1:
                 yield "The text could not be found."
                 return
@@ -120,11 +144,11 @@ class Bot:
             yield "Saved."
 
         elif cmd == '/translate':
-            cmds = message.split()
-            if len(cmds) < 2:
+            words = message.split()
+            if len(words) < 2:
                 yield "Please specify the language."
                 return
-            lang = cmds[1]
+            lang = words[1]
             if lang not in self.translation_engine.langs:
                 yield "Unavailable translation language.\nSee '/tr_langs' for available languages."
                 return
@@ -133,12 +157,14 @@ class Bot:
                 return
             try:
                 translation = self.translation_engine.translate(self.text, lang)
+                self.text = translation
                 yield translation['text'][0]
             except YandexTranslateException:
                 yield "Translation error occurred."
 
         elif cmd == '/titles':
             yield "Available texts:\n" + ", ".join(self.storage.titles(sender))
+
         elif cmd == '/languages':
             yield "Available translation languages:\n" + ', '.join(sorted(self.translation_engine.langs))
 

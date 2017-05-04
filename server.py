@@ -3,6 +3,7 @@ import requests
 from flask import Flask, request
 import json
 import time
+import sys
 from multiprocessing import Process
 from bot import Bot
 from random import randint
@@ -69,13 +70,12 @@ def handle_incoming_messages():
 
         # Trying to answer by calling 'bot.execute'
         try:
-            for bot_message in bot.execute(message, sender, send_message):
+            for bot_message in bot.execute(message, sender):
                 if bot_message is not None:
                     print(bot_message)
-                    send_message(sender, bot_message)
+                    send_message(sender, bot_message[:640])
         except Exception:
             print("Unexpected error:", sys.exc_info()[0])
-
     return "ok"
 
 
