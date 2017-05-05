@@ -4,6 +4,8 @@ from nltk.tokenize import RegexpTokenizer
 from bs4 import BeautifulSoup
 from translation_api import *
 import os
+import logging
+logging.basicConfig(filename="info.log", filemode='w', level=logging.DEBUG)
 
 
 # Private keys
@@ -38,17 +40,15 @@ def check_similarity(word, sample):
 
 class Bot:
     def __init__(self):
-        print("INITIALIZED")
+        logging.info("Bot initialized.")
         self.text = ''
         self.storage = storage.Storage()
         self.translation = None
         self.translation_engine = YandexTranslate(yandex_api_key)
 
     def execute(self, message, sender):
-        self.sender = sender
+        logging.info("\nSender: {}\nMessage: {}".format(sender, message))
         cmd = message.split()[0].lower()
-        if cmd[0] == '/':
-            cmd = cmd[1:]
 
         if cmd == 'text':
             if len(message) <= 6:
@@ -78,9 +78,9 @@ class Bot:
             self.storage.save()
             yield 'Bye!'
 
-        elif cmd == 'mine':
+        elif cmd == 'guess':
             input_data = None
-            words_file = open(os.path.join(os.path.dirname(__file__), "wordlist.txt"), 'r')
+            words_file = open(os.path.join(os.path.dirname(__file__), "Lingvo/wordlist.txt"), 'r')
             input_data = words_file.read().split()
             to_replace = dict()
             words = self.text.split()
@@ -139,7 +139,7 @@ class Bot:
                 try:
                     top = int(top_word)
                 except ValueError:
-                    pass
+                    logging.warning("Strange input.")
             yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top + 3), top)
 
         elif cmd == 'get_text':

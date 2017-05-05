@@ -1,8 +1,11 @@
 import json
+import logging
+logging.basicConfig(filename='info.log', filemode='w', level=logging.DEBUG)
 
 
 class Storage:
     def __init__(self):
+        logging.info("Storage initialized.")
         self.load()
 
     def auth(self, sender):
@@ -44,5 +47,6 @@ class Storage:
         return self.data[sender].keys()
 
     def clear(self, sender):
+        logging.warning('Clearing all titles.')
         self.auth(sender)
         self.data[sender] = {}

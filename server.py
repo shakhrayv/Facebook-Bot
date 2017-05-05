@@ -3,6 +3,8 @@ import requests
 from flask import Flask, request
 import json
 from bot import Bot
+import logging
+logging.basicConfig(filename='info.log', filemode='w', level=logging.DEBUG)
 
 
 # Facebook Configurations
@@ -16,13 +18,13 @@ bot = Bot()             # Creating a bot instance
 # Handling verification
 @app.route('/', methods=['GET'])
 def handle_verification():
-    print("Handling Verification...")
+    logging.info("Handling Verification...")
 
     if request.args.get('hub.verify_token', '') == VER_SCT:
-        print("Verification successful!")
+        logging.info("Verification successful!")
         return request.args.get('hub.challenge', '')
     else:
-        print("Verification failed!")
+        logging.critical("Verification failed!")
         return 'Error, wrong validation token.'
 
 
@@ -53,14 +55,17 @@ def send_message(recipient, text):
 def handle_incoming_messages():
     # Getting the request data
     payload = request.get_data()
+    logging.info("Incoming messages...")
 
     for sender, message in messaging_events(payload):
 
         # In some cases, the message can be empty
         # In other cases, the 'sender' field may be absent
         if sender is None:
+            logging.warning("Empty sender.")
             continue
         elif message is None:
+            logging.info("Sticker!")
             send_message(sender, '^_^')
             continue
 
@@ -68,10 +73,10 @@ def handle_incoming_messages():
         try:
             for bot_message in bot.execute(message, sender):
                 if bot_message is not None:
-                    print(bot_message)
+                    logging.info(bot_message)
                     send_message(sender, bot_message[:640])
-        except FileNotFoundError as e:
-            print("Unexpected error:", e.strerror)
+        except Exception as e:
+            logging.error("Unexpected error.")
     return "ok"
 
 
@@ -96,4 +101,5 @@ def messaging_events(payload):
 # Main function
 # Launching Flask application
 if __name__ == '__main__':
+    logging.info("App started.")
     app.run(debug=True)
