@@ -47,8 +47,6 @@ class Bot:
     def execute(self, message, sender):
         self.sender = sender
         cmd = message.split()[0].lower()
-        if cmd[0] == '/':
-            cmd = cmd[1:]
 
         if cmd == 'text':
             if len(message) <= 6:
