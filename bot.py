@@ -216,6 +216,9 @@ Add the <STRING> parameter as a text
 >download <LINK>
 Download text from <LINK>
 
+>guess
+Mines the text and guesses the words with '?' symbol based on its frequency.
+
 >translate <LANG>
 Translate current text into <LANG> language
 
