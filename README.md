@@ -15,20 +15,20 @@ The **Facebook Bot for Facebook Messenger** helps you organize and analyze any k
 ## Usage
 The bot accepts the commands as a Facebook Messenger message.<br>
 The following commands are available:
-* **```/text <STRING>```**  <br> Add the **```<STRING>```** parameter as a text<br><br>
-* **```/download <LINK>```**<br>Download text from **```<LINK>```**<br><br>
-* **```/mine```**<br>Mines the text and guesses the words with '?' symbol based on its frequency.<br><br>
-* **```/translate <LANG>```**<br>Translate current text into  ```<LANG>``` language<br><br>
-* **```/languages```**<br>Show available languages<br><br>
-* **```/save <TITLE>```**<br>Save the current text with the **```<TITLE>```** for current user<br><br>
-* **```/share <TITLE>```**<br>Shared the text with **```<TITLE>```** with all users<br><br>
-* **```/load <TITLE>```**<br>Load the text with title **```<TITLE>```** for current user<br><br>
-* **```/save_all```**<br>Saves all articles for the next session<br><br>
-* **```/word_count```**<br>Count the number of words<br><br>
-* **```/sym_count```**<br>Count the number of symbols<br><br>
-* **```/word_freq <TOP>```**<br>Get **```<TOP>```** most frequent words<br><br>
-* **```/sym_freq <TOP>```**<br>Get **```<TOP>```** most frequent symbols<br><br>
-* **```/help```**<br>Echo help<br><br>
+* **```text <STRING>```**  <br> Add the **```<STRING>```** parameter as a text<br><br>
+* **```download <LINK>```**<br>Download text from **```<LINK>```**<br><br>
+* **```mine```**<br>Mines the text and guesses the words with '?' symbol based on its frequency.<br><br>
+* **```translate <LANG>```**<br>Translate current text into  ```<LANG>``` language<br><br>
+* **```languages```**<br>Show available languages<br><br>
+* **```save <TITLE>```**<br>Save the current text with the **```<TITLE>```** for current user<br><br>
+* **```share <TITLE>```**<br>Shared the text with **```<TITLE>```** with all users<br><br>
+* **```load <TITLE>```**<br>Load the text with title **```<TITLE>```** for current user<br><br>
+* **```save_all```**<br>Saves all articles for the next session<br><br>
+* **```word_count```**<br>Count the number of words<br><br>
+* **```sym_count```**<br>Count the number of symbols<br><br>
+* **```word_freq <TOP>```**<br>Get **```<TOP>```** most frequent words<br><br>
+* **```sym_freq <TOP>```**<br>Get **```<TOP>```** most frequent symbols<br><br>
+* **```help```**<br>Echo help<br><br>
 
 ## Screenshots
 <img src="https://ibin.co/3LKoNy8rzeWD.jpg" width="220"/> <img src="https://ibin.co/3LKp2rydacB3.jpg" width="220"/> 
