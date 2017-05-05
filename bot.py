@@ -46,37 +46,39 @@ class Bot:
 
     def execute(self, message, sender):
         self.sender = sender
-        cmd = message.split()[0]
+        cmd = message.split()[0].lower()
+        if cmd[0] == '/':
+            cmd = cmd[1:]
 
-        if cmd == '/text':
+        if cmd == 'text':
             if len(message) <= 6:
                 yield "Looks like you forgot to enter the text!\nPrint 'help' for more information."
                 return
             self.text = message[6:]
             yield 'Got it!'
 
-        elif cmd == '/word_count':
+        elif cmd == 'word_count':
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
                 return
             yield str(len(word_tokenizer.tokenize(message)))
 
-        elif cmd == '/sym_count':
+        elif cmd == 'sym_count':
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
                 return
             yield str(len(message))
 
-        elif cmd == '/clear':
+        elif cmd == 'clear':
             self.text = ''
             self.storage.clear(sender)
             yield "Cleared!"
 
-        elif cmd == '/quit' or cmd == '/exit':
+        elif cmd == 'quit' or cmd == 'exit':
             self.storage.save()
             yield 'Bye!'
 
-        elif cmd == '/mine':
+        elif cmd == 'mine':
             input_data = None
             words_file = open(os.path.join(os.path.dirname(__file__), "wordlist.txt"), 'r')
             input_data = words_file.read().split()
@@ -102,7 +104,7 @@ class Bot:
             self.text = nltk.Text(words).name[:-3]
             yield self.text
 
-        elif cmd == '/sym_freq':
+        elif cmd == 'sym_freq':
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
                 return
@@ -116,10 +118,8 @@ class Bot:
                     pass
             yield prettify(nltk.FreqDist(nltk.Text(self.text)).most_common(top))
 
-        elif cmd == '/download':
+        elif cmd == 'download':
             link = message[len(cmd)+1:]
-            if 'http://' not in link and 'https://' not in link:
-                link = 'https://' + link
             try:
                 f = requests.get(link).text
                 soup = BeautifulSoup(f, "html.parser")
@@ -128,7 +128,7 @@ class Bot:
             except:
                 yield 'An error occurred during the connection attempt.\nPlease try again.'
 
-        elif cmd == '/word_freq':
+        elif cmd == 'word_freq':
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
                 return
@@ -142,13 +142,13 @@ class Bot:
                     pass
             yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top + 3), top)
 
-        elif cmd == '/get_text':
+        elif cmd == 'get_text':
             if self.text == '':
                 yield "Looks like I don't have any text!\nPrint 'help' for more information."
                 return
             yield self.text[:640]
 
-        elif cmd == '/save':
+        elif cmd == 'save':
             if self.text == '':
                 yield "Looks like I don't have any text!\nPrint 'help' for more information."
                 return
@@ -159,7 +159,7 @@ class Bot:
             self.storage.save_text(sender, self.text, words[1])
             yield "Saved " + "'" + words[1] + "'"
 
-        elif cmd == '/share':
+        elif cmd == 'share':
             words = message.split()
             if len(words) < 2:
                 yield "The title cannot be empty."
@@ -167,7 +167,7 @@ class Bot:
             self.storage.share_text(sender, words[1])
             yield "Shared " + "'" + words[1] + "'"
 
-        elif cmd == '/load':
+        elif cmd == 'load':
             words = message.split()
             if len(words) < 2:
                 yield "The title cannot be empty."
@@ -179,18 +179,18 @@ class Bot:
             self.text = t
             yield "Text loaded."
 
-        elif cmd == '/save_all':
+        elif cmd == 'save_all':
             self.storage.save()
             yield "Saved."
 
-        elif cmd == '/translate':
+        elif cmd == 'translate':
             words = message.split()
             if len(words) < 2:
                 yield "Please specify the language."
                 return
             lang = words[1]
             if lang not in self.translation_engine.langs:
-                yield "Unavailable translation language.\nSee '/tr_langs' for available languages."
+                yield "Unavailable translation language.\nSee 'tr_langs' for available languages."
                 return
             if self.text == '':
                 yield "Looks like I don't have any text!\nPrint 'help' for more information."
@@ -202,53 +202,50 @@ class Bot:
             except YandexTranslateException:
                 yield "Translation error occurred."
 
-        elif cmd == '/titles':
+        elif cmd == 'titles':
             yield "Available texts:\n" + ", ".join(self.storage.titles(sender))
 
-        elif cmd == '/languages':
+        elif cmd == 'languages':
             yield "Available translation languages:\n" + ', '.join(sorted(self.translation_engine.langs))
 
-        elif cmd == '/hi':
-            yield "Hi!"
-
-        elif cmd == '/help':
+        elif cmd == 'help':
             yield '''
-/text <STRING>  
+>text <STRING>  
 Add the <STRING> parameter as a text
 
-/download <LINK>
+>download <LINK>
 Download text from <LINK>
 
-/translate <LANG>
+>translate <LANG>
 Translate current text into <LANG> language
 
-/languages
+>languages
 Show available languages
 
-/save <TITLE>
+>save <TITLE>
 Save the current text with the <TITLE> for current user
 
-/share <TITLE>
+>share <TITLE>
 Shared the text with <TITLE> with all users
 
-/load <TITLE>
+>load <TITLE>
 Load the text with title <TITLE> for current user
 
-/save_all
+>save_all
 Saves all articles for the next session
 
-/word_count
+>word_count
 Count the number of words
 
-/sym_count
+>sym_count
 Count the number of symbols
 
-/word_freq <TOP>
+>word_freq <TOP>
 Get <TOP> most frequent words
 
-/sym_freq <TOP>
+>sym_freq <TOP>
 Get <TOP> most frequent symbols
  '''
 
         else:
-            yield 'Command was not detected.\nType "/help" for more information.'
+            yield "Command was not detected.\nType 'help' for more information."
