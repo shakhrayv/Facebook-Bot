@@ -51,10 +51,10 @@ class Bot:
         cmd = message.split()[0].lower()
 
         if cmd == 'text':
-            if len(message) <= 6:
+            if len(message) <= len(cmd)+1:
                 yield "Looks like you forgot to enter the text!\nPrint 'help' for more information."
                 return
-            self.text = message[6:]
+            self.text = message[len(cmd)+1:]
             yield 'Got it!'
 
         elif cmd == 'word_count':
