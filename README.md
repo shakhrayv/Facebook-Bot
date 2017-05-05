@@ -29,3 +29,6 @@ The following commands are available:
 * **```/word_freq <TOP>```**<br>Get **```<TOP>```** most frequent words<br><br>
 * **```/sym_freq <TOP>```**<br>Get **```<TOP>```** most frequent symbols<br><br>
 * **```/help```**<br>Echo help<br><br>
+
+## Screenshots
+<img src="https://ibin.co/3LKoNy8rzeWD.jpg" width="220"/> <img src="https://ibin.co/3LKp2rydacB3.jpg" width="220"/> 
