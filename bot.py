@@ -3,6 +3,8 @@ import storage
 from nltk.tokenize import RegexpTokenizer
 from bs4 import BeautifulSoup
 from translation_api import *
+import os
+
 
 # Private keys
 yandex_api_key = 'trnsl.1.1.20170504T161543Z.1ce6778cb7154603.5f9dbe3d943c4486d33bf509831868ce1f10bdc8'
@@ -23,6 +25,17 @@ def prettify(array, top):
     return text
 
 
+def check_similarity(word, sample):
+    if len(word) != len(sample):
+        return False
+    for i in range(len(word)):
+        if word[i] == '?' or sample[i] == '?':
+            continue
+        if word[i] != sample[i]:
+            return False
+    return True
+
+
 class Bot:
     def __init__(self):
         print("INITIALIZED")
@@ -30,9 +43,6 @@ class Bot:
         self.storage = storage.Storage()
         self.translation = None
         self.translation_engine = YandexTranslate(yandex_api_key)
-
-    def store_temp(self, translation):
-        self.translation = translation
 
     def execute(self, message, sender):
         self.sender = sender
@@ -65,6 +75,32 @@ class Bot:
         elif cmd == '/quit' or cmd == '/exit':
             self.storage.save()
             yield 'Bye!'
+
+        elif cmd == '/mine':
+            input_data = None
+            words_file = open(os.path.join(os.path.dirname(__file__), "wordlist.txt"), 'r')
+            input_data = words_file.read().split()
+            to_replace = dict()
+            words = self.text.split()
+            frequencies = nltk.FreqDist(words).most_common(len(words))
+            for elem in frequencies:
+                word = elem[0]
+                if word in to_replace.keys():
+                    continue
+
+                if '?' not in word:
+                    continue
+
+                for sample_word in input_data:
+                    if check_similarity(word, sample_word):
+                        to_replace[word] = sample_word
+                        break
+            for i in range(len(words)):
+                if words[i] in to_replace.keys():
+                    words[i] = to_replace[words[i]]
+            text = nltk.Text(words)
+            self.text = nltk.Text(words).name[:-3]
+            yield self.text
 
         elif cmd == '/sym_freq':
             if self.text == '':

@@ -2,11 +2,7 @@
 import requests
 from flask import Flask, request
 import json
-import time
-import sys
-from multiprocessing import Process
 from bot import Bot
-from random import randint
 
 
 # Facebook Configurations
@@ -74,8 +70,8 @@ def handle_incoming_messages():
                 if bot_message is not None:
                     print(bot_message)
                     send_message(sender, bot_message[:640])
-        except Exception:
-            print("Unexpected error:", sys.exc_info()[0])
+        except FileNotFoundError as e:
+            print("Unexpected error:", e.strerror)
     return "ok"
 
 
