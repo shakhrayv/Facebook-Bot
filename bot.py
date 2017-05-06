@@ -51,10 +51,10 @@ class Bot:
         cmd = message.split()[0].lower()
 
         if cmd == 'text':
-            if len(message) <= len(cmd)+1:
+            if len(message) <= len(cmd) + 1:
                 yield "Looks like you forgot to enter the text!\nPrint 'help' for more information."
                 return
-            self.text = message[len(cmd)+1:]
+            self.text = message[len(cmd) + 1:]
             yield 'Got it!'
 
         elif cmd == 'word_count':
@@ -115,18 +115,25 @@ class Bot:
                 try:
                     top = int(top_word)
                 except ValueError:
-                    pass
+                    logging.warning("Incorrect input.")
             yield prettify(nltk.FreqDist(nltk.Text(self.text)).most_common(top))
 
         elif cmd == 'download':
-            link = message[len(cmd)+1:]
+            link = message[len(cmd) + 1:]
             try:
                 f = requests.get(link).text
                 soup = BeautifulSoup(f, "html.parser")
                 self.text = soup.get_text()
                 yield 'Download successful.'
+            except ConnectionError:
+                logging.warning("Connection error.")
+                yield "Connection error."
+            except TimeoutError:
+                logging.warning("Connection timeout.")
+                yield "Connection timeout."
             except:
-                yield 'An error occurred during the connection attempt.\nPlease try again.'
+                logging.warning("Could not load page.")
+                yield "Could not load page."
 
         elif cmd == 'word_freq':
             if self.text == '':
