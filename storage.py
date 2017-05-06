@@ -57,7 +57,8 @@ class Storage:
                          "CREATE TABLE SHARED (title text, text text)"], [None, None])
 
     def save_text(self, sender, text, title):
-        perform_actions(["INSERT INTO ARTICLES VALUES (?,?,?)"], [(sender, title, text)])
+        if not self.load_text(sender, title):
+            perform_actions(["INSERT INTO ARTICLES VALUES (?,?,?)"], [(sender, title, text)])
 
     def load_text(self, sender, title):
         personal = select(["SELECT * FROM ARTICLES WHERE owner=? AND title=?"], [(sender, title)])
