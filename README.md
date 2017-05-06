@@ -1,7 +1,7 @@
 # Facebook-Bot
 
 ## Prerequisites
-The **Facebook Bot for Facebook Messenger** helps you organize and analyze any kind of text or messages.<br>
+The **Facebook Bot for Facebook Messenger** helps you organize, analyze, translate and share any kind of text or messages.<br>
 <br>The project was created as part of the home assignment during the Python course at MIPT University.
 <br> The code was written by Vladislav Shakhray.<br>The program is licensed under the terms of GNU Public License.
 <br><br>
@@ -13,6 +13,8 @@ The **Facebook Bot for Facebook Messenger** helps you organize and analyze any k
 4. [ngrok](https://ngrok.com/download)
 
 ## Usage
+<br>
+*Important:*In order to communicate with the bot, go to its [Facebook Page](https://www.facebook.com/mipt.bot) and write it a message.<br><br>
 The bot accepts the commands as a Facebook Messenger message.<br>
 The following commands are available:
 * **```text <STRING>```**  <br> Add the **```<STRING>```** parameter as a text<br><br>
