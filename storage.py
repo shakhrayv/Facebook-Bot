@@ -1,52 +1,85 @@
-import json
+import sqlite3
 import logging
 logging.basicConfig(filename='info.log', filemode='w', level=logging.DEBUG)
+
+DB_FILENAME = 'storage.db'
+
+
+# The function that performs executions
+def perform_actions(action_list, params):
+    conn = sqlite3.connect(DB_FILENAME)
+    c = conn.cursor()
+
+    for i, action in enumerate(action_list):
+        if params[i]:
+            c.execute(action, params[i])
+        else:
+            c.execute(action)
+
+    # Closing and disconnection
+    conn.commit()
+    c.close()
+    conn.close()
+
+
+# Selecting
+def select(action_list, params):
+    print(action_list, params)
+    result = []
+    conn = sqlite3.connect(DB_FILENAME)
+    c = conn.cursor()
+
+    for i, action in enumerate(action_list):
+        if params[i]:
+            c.execute(action, params[i])
+            result += c.fetchall()
+        else:
+            result += c.execute(action).fetchall()
+
+    # Closing and disconnection
+    conn.commit()
+    c.close()
+    conn.close()
+    return result
 
 
 class Storage:
     def __init__(self):
         logging.info("Storage initialized.")
-        self.load()
-
-    def auth(self, sender):
-        if sender not in self.data.keys():
-            self.data[sender] = {}
-
-    def save(self):
-        file = open("data.json", 'w')
-        file.write(json.dumps(self.data))
-        file.close()
-
-    def load(self):
         try:
-            file = open("data.json", 'r')
-            self.data = json.loads(file.read())
+            open(DB_FILENAME, 'r')
         except:
-            self.data = {}
+            logging.info("Creating database.")
+            self.create_database()
 
-    def save_text(self, sender, text, title="Untitled"):
-        self.auth(sender)
-        self.data[sender][title] = text
-        self.save()
+    def create_database(self):
+        perform_actions(["CREATE TABLE ARTICLES (owner integer, title text, text text)",
+                         "CREATE TABLE SHARED (title text, text text)"], [None, None])
+
+    def save_text(self, sender, text, title):
+        perform_actions(["INSERT INTO ARTICLES VALUES (?,?,?)"], [(sender, title, text)])
 
     def load_text(self, sender, title):
-        self.auth(sender)
-        if title in self.data[sender].keys():
-            return self.data[sender][title]
-        return ''
+        personal = select(["SELECT * FROM ARTICLES WHERE owner=? AND title=?"], [(sender, title)])
+        shared = select(["SELECT * FROM SHARED WHERE title=?"], [(title,)])
+        print(personal, shared)
+        if len(personal) == len(shared) == 0:
+            return None
+        elif len(personal) > 0:
+            return personal[0][2]
+        return shared[0][1]
 
     def share_text(self, sender, title):
-        self.auth(sender)
-        if title in self.data[sender].keys():
-            for s in self.data.keys():
-                self.data[s][title] = self.data[sender][title]
-        self.save()
+        text = self.load_text(sender, title)
+        perform_actions(["INSERT INTO SHARED VALUES (?,?)"], [(title, text)])
 
     def titles(self, sender):
-        self.auth(sender)
-        return self.data[sender].keys()
+        personal = select(["SELECT * FROM ARTICLES WHERE owner=?"], [(sender,)])
+        shared = select(["SELECT * FROM SHARED"], [None])
+        for entry in personal:
+            yield entry[1]
+        for entry in shared:
+            yield entry[0]
 
     def clear(self, sender):
-        logging.warning('Clearing all titles.')
-        self.auth(sender)
-        self.data[sender] = {}
+        perform_actions(["DELETE FROM ARTICLES WHERE owner=?"], [(sender,)])

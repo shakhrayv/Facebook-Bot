@@ -33,7 +33,7 @@ def get_user_info(token, user_id):
     r = requests.get("https://graph.facebook.com/v2.6/" + user_id,
                      params={"fields": "first_name,last_name", "access_token": token })
     if r.status_code != requests.codes.ok:
-        print(r.text)
+        logging.error(r.text)
     return json.loads(r.content)
 
 
@@ -47,7 +47,7 @@ def send_message(recipient, text):
             }),
         headers={'Content-type': 'application/json'})
     if r.status_code != requests.codes.ok:
-        print(r.text)
+        logging.error(r.text)
 
 
 # This method will be called every time the message is received
