@@ -49,13 +49,13 @@ class Bot:
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
             else:
-                yield str(len(word_tokenizer.tokenize(message)))
+                yield str(len(word_tokenizer.tokenize(self.text)))
 
         elif cmd == 'sym_count':
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
             else:
-                yield str(len(message))
+                yield str(len(self.text))
 
         elif cmd == 'clear':
             self.text = ''
@@ -79,7 +79,7 @@ class Bot:
                 top = 5
                 try:
                     top = int(message.split()[1])
-                except ValueError or IndexError:
+                except:
                     logging.warning("Incorrect input.")
                 yield prettify(nltk.FreqDist(nltk.Text(self.text)).most_common(top))
 
@@ -107,7 +107,7 @@ class Bot:
                 top = 5
                 try:
                     top = int(message.split()[1])
-                except ValueError or IndexError:
+                except:
                     logging.warning("Incorrect input.")
                 yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top + 3), top)
 
@@ -262,3 +262,6 @@ Get <TOP> most frequent symbols
         text = nltk.Text(words)
         self.text = nltk.Text(words).name[:-3]
         return True
+
+a = []
+print(prettify(a, 5))

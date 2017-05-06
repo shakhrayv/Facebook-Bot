@@ -77,6 +77,7 @@ def handle_incoming_messages():
                     send_message(sender, bot_message[:640])
         except Exception as e:
             logging.error("Unexpected error.")
+            send_message(sender, "Internal error occurred.")
     return "ok"
 
 
