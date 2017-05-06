@@ -84,3 +84,4 @@ class Storage:
 
     def clear(self, sender):
         perform_actions(["DELETE FROM ARTICLES WHERE owner=?"], [(sender,)])
+        perform_actions(["DELETE FROM SHARED"], [None])
