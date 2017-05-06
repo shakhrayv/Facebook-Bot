@@ -24,7 +24,6 @@ def perform_actions(action_list, params):
 
 # Selecting
 def select(action_list, params):
-    print(action_list, params)
     result = []
     conn = sqlite3.connect(DB_FILENAME)
     c = conn.cursor()
