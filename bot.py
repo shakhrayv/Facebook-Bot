@@ -76,10 +76,11 @@ class Bot:
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
             else:
+                top = 5
                 try:
                     top = int(message.split()[1])
                 except ValueError or IndexError:
-                    top = 5
+                    logging.warning("Incorrect input.")
                 yield prettify(nltk.FreqDist(nltk.Text(self.text)).most_common(top))
 
         elif cmd == 'download':
@@ -103,10 +104,11 @@ class Bot:
             if self.text == '':
                 yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
             else:
+                top = 5
                 try:
                     top = int(message.split()[1])
                 except ValueError or IndexError:
-                    top = 5
+                    logging.warning("Incorrect input.")
                 yield prettify(nltk.FreqDist(word_tokenizer.tokenize(self.text)).most_common(top + 3), top)
 
         elif cmd == 'get_text':
