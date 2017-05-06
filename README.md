@@ -2,9 +2,9 @@
 
 ## Prerequisites
 The **Facebook Bot for Facebook Messenger** helps you organize, analyze, translate and share any kind of text or messages.<br>
-The bot is deployed on Heroku, featuring continuous GitHub integration, so feel free to use it anytime!<br>
-The bot can be accessed from its [Facebook Page](https://www.facebook.com/mipt.bot).
-<br>The project was created as part of the home assignment during the Python course at MIPT University.
+It is deployed on Heroku, featuring continuous GitHub integration, so feel free to use it anytime!<br>
+*The bot can be accessed from its [Facebook Page](https://www.facebook.com/mipt.bot).*
+<br><br>The project was created as part of the home assignment during the Python course at MIPT University.
 <br> The code was written by Vladislav Shakhray.<br>The program is licensed under the terms of GNU Public License.
 <br><br>
 
