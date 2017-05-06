@@ -14,7 +14,7 @@ The **Facebook Bot for Facebook Messenger** helps you organize, analyze, transla
 
 ## Usage
 <br>
-*Important:*In order to communicate with the bot, go to its [Facebook Page](https://www.facebook.com/mipt.bot) and write it a message.<br><br>
+**Important:**In order to communicate with the bot, go to its Facebook Page at *@mipt.bot* and write it a message.<br><br>
 The bot accepts the commands as a Facebook Messenger message.<br>
 The following commands are available:
 * **```text <STRING>```**  <br> Add the **```<STRING>```** parameter as a text<br><br>
