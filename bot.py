@@ -158,7 +158,7 @@ class Bot:
                 yield "Looks like I don't have any text!\nPrint 'help' for more information."
             else:
                 try:
-                    translation = self.translation_engine.translate(self.text, lang)
+                    translation = self.translation_engine.translate(self.text, words[1])
                     self.text = translation['text'][0]
                     yield translation['text'][0]
                 except YandexTranslateException:
