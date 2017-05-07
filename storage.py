@@ -76,9 +76,9 @@ class Storage:
         personal = select(["SELECT * FROM ARTICLES WHERE owner=?"], [(sender,)])
         shared = select(["SELECT * FROM SHARED"], [None])
         for entry in personal:
-            yield "{} (Personal)".format(entry[1])
+            yield "%s (Personal)", entry[1]
         for entry in shared:
-            yield "{} (Shared)".format(entry[0])
+            yield "%s (Shared)", entry[0]
 
     def clear(self, sender):
         perform_actions(["DELETE FROM ARTICLES WHERE owner=?"], [(sender,)])
