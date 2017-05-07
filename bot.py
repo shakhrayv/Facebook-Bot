@@ -168,13 +168,14 @@ class Bot:
         elif cmd == 'titles':
             try:
                 titles = self.storage.titles(sender)
+
                 if titles and len(titles) > 0:
-                    yield "Available texts:\n{}".format('\n'.join(titles))
+                    yield "Available texts:\n{}".format(', '.join(titles))
                 else:
                     yield "No texts available."
             except:
                 logging.error("Could not show titles.")
-                yield "Database error."
+                yield "No"
 
         elif cmd == 'languages':
             yield "Available translation languages:\n {}".format(', '.join(sorted(self.translation_engine.langs)))
