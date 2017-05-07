@@ -168,7 +168,10 @@ class Bot:
         elif cmd == 'titles':
             try:
                 titles = self.storage.titles(sender)
-                yield "Available texts:\n{}".format('\n'.join(titles))
+                if len(titles):
+                    yield "Available texts:\n{}".format('\n'.join(titles))
+                else:
+                    yield "No texts available."
             except:
                 logging.error("Could not show titles.")
                 yield "Database error."
