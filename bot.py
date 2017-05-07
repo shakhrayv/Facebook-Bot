@@ -72,17 +72,6 @@ class Bot:
             else:
                 yield "Could not guess due to internal error."
 
-        elif cmd == 'sym_freq':
-            if self.text == '':
-                yield "Looks like I have no text to analyze!\nPrint 'help' for more information."
-            else:
-                top = 5
-                try:
-                    top = int(message.split()[1])
-                except:
-                    logging.warning("Incorrect input.")
-                yield prettify(nltk.FreqDist(nltk.Text(self.text)).most_common(top))
-
         elif cmd == 'download':
             link = message[len(cmd) + 1:]
             try:
@@ -224,9 +213,6 @@ Count the number of symbols
 
 >word_freq <TOP>
 Get <TOP> most frequent words
-
->sym_freq <TOP>
-Get <TOP> most frequent symbols
  '''
         else:
             yield "Command was not detected.\nType 'help' for more information."
@@ -262,6 +248,3 @@ Get <TOP> most frequent symbols
         text = nltk.Text(words)
         self.text = nltk.Text(words).name[:-3]
         return True
-
-a = []
-print(prettify(a, 5))
