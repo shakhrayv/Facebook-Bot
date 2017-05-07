@@ -168,7 +168,7 @@ class Bot:
         elif cmd == 'titles':
             try:
                 titles = self.storage.titles(sender)
-                if titles:
+                if titles and len(titles) > 0:
                     yield "Available texts:\n{}".format('\n'.join(titles))
                 else:
                     yield "No texts available."
