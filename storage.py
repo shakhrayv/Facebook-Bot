@@ -61,7 +61,7 @@ class Storage:
             return True
         return False
 
-    def load_text(self, sender, title, scope=):
+    def load_text(self, sender, title):
         personal = select(["SELECT * FROM ARTICLES WHERE owner=? AND title=?"], [(sender, title)])
         shared = select(["SELECT * FROM SHARED WHERE title=?"], [(title,)])
         if len(personal) == len(shared) == 0:
