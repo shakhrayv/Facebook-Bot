@@ -33,10 +33,12 @@ class Bot:
         self.storage = storage.Storage()
         self.translation = None
         self.translation_engine = YandexTranslate(yandex_api_key)
+        self.last_sender = None
 
     def execute(self, message, sender):
         logging.info("\nSender: {}\nMessage: {}".format(sender, message))
         cmd = message.split()[0].lower()
+        self.last_sender = sender
 
         if cmd == 'text':
             if len(message) <= len(cmd) + 1:

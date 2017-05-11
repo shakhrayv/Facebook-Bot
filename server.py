@@ -4,6 +4,7 @@ from flask import Flask, request
 import json
 from bot import Bot
 import logging
+import timer
 logging.basicConfig(filename='info.log', filemode='w', level=logging.DEBUG)
 
 
@@ -14,6 +15,12 @@ VER_SCT = "YKIZr)*FCZSO@[mTS/eW"
 app = Flask(__name__)   # Creating Flask application
 bot = Bot()             # Creating a bot instance
 
+
+# Dumping to storage
+def feeling_sleepy():
+    send_message(bot.last_sender, "I'm feeling sleepy. Please talk to me.")
+
+timer = timer.RepeatedTimer(4, feeling_sleepy)
 
 # Handling verification
 @app.route('/', methods=['GET'])
