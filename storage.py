@@ -56,10 +56,12 @@ class Storage:
                          "CREATE TABLE SHARED (title text, text text)"], [None, None])
 
     def save_text(self, sender, text, title):
-        if not self.load_text(sender, title):
+        if not self.check_title(sender, title):
             perform_actions(["INSERT INTO ARTICLES VALUES (?,?,?)"], [(sender, title, text)])
+            return True
+        return False
 
-    def load_text(self, sender, title):
+    def load_text(self, sender, title, scope=):
         personal = select(["SELECT * FROM ARTICLES WHERE owner=? AND title=?"], [(sender, title)])
         shared = select(["SELECT * FROM SHARED WHERE title=?"], [(title,)])
         if len(personal) == len(shared) == 0:
@@ -68,9 +70,13 @@ class Storage:
             return personal[0][2]
         return shared[0][1]
 
-    def share_text(self, sender, title):
+    def share_text(self, sender, title, new_title):
+        can_share = self.check_title(sender, new_title, 1)
+        if not can_share:
+            return False
         text = self.load_text(sender, title)
-        perform_actions(["INSERT INTO SHARED VALUES (?,?)"], [(title, text)])
+        perform_actions(["INSERT INTO SHARED VALUES (?,?)"], [(new_title, text)])
+        return True
 
     def titles(self, sender):
         personal = select(["SELECT * FROM ARTICLES WHERE owner=?"], [(sender,)])
@@ -83,3 +89,13 @@ class Storage:
     def clear(self, sender):
         perform_actions(["DELETE FROM ARTICLES WHERE owner=?"], [(sender,)])
         perform_actions(["DELETE FROM SHARED"], [None])
+
+    def check_title(self, sender, title, scope=0):
+        titles = []
+        if scope:
+            titles = select(["SELECT * FROM SHARED WHERE title=?"], [(title,)])
+        else:
+            titles = select(["SELECT * FROM ARTICLES WHERE owner=? AND title=?"], [(sender,title)])
+        return len(titles) > 0
+
+

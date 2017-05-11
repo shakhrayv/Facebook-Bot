@@ -122,12 +122,15 @@ class Bot:
 
         elif cmd == 'share':
             words = message.split()
-            if len(words) < 2:
-                yield "The title cannot be empty."
+            if len(words) < 3:
+                yield "Please enter two titles."
             else:
                 try:
-                    self.storage.share_text(sender, words[1])
-                    yield "'{}' was successfully shared.".format(words[1])
+                    if self.storage.share_text(sender, words[1], words[2]):
+                        yield "'{}' was successfully shared.".format(words[1])
+                    else:
+                        logging.warning("Could not share text.")
+                        yield "Could not share text."
                 except:
                     logging.error("Could not share text")
                     yield "Database error"
