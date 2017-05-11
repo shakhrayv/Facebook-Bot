@@ -71,8 +71,9 @@ class Storage:
         return shared[0][1]
 
     def share_text(self, sender, title, new_title):
-        can_share = self.check_title(sender, new_title, 1)
-        if not can_share:
+        present_1 = self.check_title(sender, title)
+        present_2 = self.check_title(sender, new_title, 1)
+        if present_2 or not present_1:
             return False
         text = self.load_text(sender, title)
         perform_actions(["INSERT INTO SHARED VALUES (?,?)"], [(new_title, text)])
