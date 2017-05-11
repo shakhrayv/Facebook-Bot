@@ -87,7 +87,7 @@ def handle_incoming_messages():
                     logging.info(bot_message)
                     send_message(sender, bot_message[:640])
                     global timer
-                    timer = threading.Timer(5, feeling_sleepy)
+                    timer = threading.Timer(TTSLEEP, feeling_sleepy)
                     timer.start()
         except Exception as e:
             logging.error("Unexpected error.")
