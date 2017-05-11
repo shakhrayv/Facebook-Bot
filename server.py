@@ -21,6 +21,7 @@ timer = None
 def feeling_sleepy():
     send_message(bot.last_sender, "I'm feeling sleepy. Please talk to me.")
     global timer
+    timer = threading.Timer(5, feeling_sleepy)
     timer.start()
 
 timer = threading.Timer(5, feeling_sleepy)
@@ -86,7 +87,6 @@ def handle_incoming_messages():
                     logging.info(bot_message)
                     send_message(sender, bot_message[:640])
                     global timer
-                    timer.cancel()
                     timer.start()
         except Exception as e:
             logging.error("Unexpected error.")
