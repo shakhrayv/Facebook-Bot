@@ -82,7 +82,7 @@ def handle_incoming_messages():
                 if bot_message is not None:
                     logging.info(bot_message)
                     send_message(sender, bot_message[:640])
-                    if not timer:
+                    if not tm:
                         tm = timer.RepeatedTimer(5, feeling_sleepy)
         except Exception as e:
             logging.error("Unexpected error.")
