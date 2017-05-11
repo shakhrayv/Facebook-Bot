@@ -20,7 +20,7 @@ bot = Bot()             # Creating a bot instance
 def feeling_sleepy():
     send_message(bot.last_sender, "I'm feeling sleepy. Please talk to me.")
 
-timer = timer.RepeatedTimer(4, feeling_sleepy)
+tm = None
 
 # Handling verification
 @app.route('/', methods=['GET'])
@@ -82,6 +82,8 @@ def handle_incoming_messages():
                 if bot_message is not None:
                     logging.info(bot_message)
                     send_message(sender, bot_message[:640])
+                    if not timer:
+                        tm = timer.RepeatedTimer(5, feeling_sleepy)
         except Exception as e:
             logging.error("Unexpected error.")
             send_message(sender, "Internal error occurred.")
