@@ -4,7 +4,7 @@ from flask import Flask, request
 import json
 from bot import Bot
 import logging
-import timer
+import threading
 logging.basicConfig(filename='info.log', filemode='w', level=logging.DEBUG)
 
 
@@ -20,7 +20,6 @@ bot = Bot()             # Creating a bot instance
 def feeling_sleepy():
     send_message(bot.last_sender, "I'm feeling sleepy. Please talk to me.")
 
-tm = None
 
 # Handling verification
 @app.route('/', methods=['GET'])
@@ -82,8 +81,8 @@ def handle_incoming_messages():
                 if bot_message is not None:
                     logging.info(bot_message)
                     send_message(sender, bot_message[:640])
-                    if not tm:
-                        tm = timer.RepeatedTimer(5, feeling_sleepy)
+                    t = threading.Timer(5.0, feeling_sleepy)
+                    t.start()
         except Exception as e:
             logging.error("Unexpected error.")
             send_message(sender, "Internal error occurred.")
