@@ -56,7 +56,7 @@ class Storage:
                          "CREATE TABLE SHARED (title text, text text)"], [None, None])
 
     def save_text(self, sender, text, title):
-        if not self.check_title(sender, title):
+        if not self.check_title(sender, title) and not self.check_title(sender, title, 1):
             perform_actions(["INSERT INTO ARTICLES VALUES (?,?,?)"], [(sender, title, text)])
             return True
         return False
@@ -73,7 +73,8 @@ class Storage:
     def share_text(self, sender, title, new_title):
         present_1 = self.check_title(sender, title)
         present_2 = self.check_title(sender, new_title, 1)
-        if present_2 or not present_1:
+        present_3 = self.check_title(sender, new_title)
+        if present_2 or present_3 or not present_1:
             return False
         text = self.load_text(sender, title)
         perform_actions(["INSERT INTO SHARED VALUES (?,?)"], [(new_title, text)])

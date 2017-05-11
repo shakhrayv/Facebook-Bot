@@ -116,8 +116,10 @@ class Bot:
                 yield "The title cannot be empty."
             else:
                 try:
-                    self.storage.save_text(sender, self.text, words[1])
-                    yield "'{}' was successfully saved.".format(words[1])
+                    if self.storage.save_text(sender, self.text, words[1]):
+                        yield "'{}' was successfully saved.".format(words[1])
+                    else:
+                        yield "The article with the same titles already exists."
                 except:
                     logging.error("Could not save text")
                     yield "Database error"
