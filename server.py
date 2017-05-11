@@ -14,12 +14,16 @@ VER_SCT = "YKIZr)*FCZSO@[mTS/eW"
 
 app = Flask(__name__)   # Creating Flask application
 bot = Bot()             # Creating a bot instance
+timer = None
 
 
 # Dumping to storage
 def feeling_sleepy():
     send_message(bot.last_sender, "I'm feeling sleepy. Please talk to me.")
+    global timer
+    timer.start()
 
+timer = threading.Timer(5, feeling_sleepy)
 
 # Handling verification
 @app.route('/', methods=['GET'])
@@ -81,8 +85,9 @@ def handle_incoming_messages():
                 if bot_message is not None:
                     logging.info(bot_message)
                     send_message(sender, bot_message[:640])
-                    t = threading.Timer(5.0, feeling_sleepy)
-                    t.start()
+                    global timer
+                    timer.cancel()
+                    timer.start()
         except Exception as e:
             logging.error("Unexpected error.")
             send_message(sender, "Internal error occurred.")
