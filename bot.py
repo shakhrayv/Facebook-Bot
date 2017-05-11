@@ -38,7 +38,8 @@ class Bot:
     def execute(self, message, sender):
         logging.info("\nSender: {}\nMessage: {}".format(sender, message))
         cmd = message.split()[0].lower()
-        self.last_sender = sender
+        if not self.last_sender:
+            self.last_sender = sender
 
         if cmd == 'text':
             if len(message) <= len(cmd) + 1:
@@ -119,10 +120,10 @@ class Bot:
                     if self.storage.save_text(sender, self.text, words[1]):
                         yield "'{}' was successfully saved.".format(words[1])
                     else:
-                        yield "The article with the same titles already exists."
+                        yield "The article with the same title already exists."
                 except:
                     logging.error("Could not save text")
-                    yield "Database error"
+                    yield "Database error."
 
         elif cmd == 'share':
             words = message.split()
@@ -136,8 +137,8 @@ class Bot:
                         logging.warning("Could not share text.")
                         yield "Could not share text."
                 except:
-                    logging.error("Could not share text")
-                    yield "Database error"
+                    logging.error("Could not share text.")
+                    yield "Database error."
 
         elif cmd == 'load':
             words = message.split()
@@ -153,7 +154,7 @@ class Bot:
                     yield "Loaded text: {}".format(self.text)
             except:
                 logging.error("Could not load text")
-                yield "Database error"
+                yield "Database error."
 
         elif cmd == 'translate':
             words = message.split()

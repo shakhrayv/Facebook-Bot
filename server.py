@@ -15,7 +15,7 @@ VER_SCT = "YKIZr)*FCZSO@[mTS/eW"
 app = Flask(__name__)   # Creating Flask application
 bot = Bot()             # Creating a bot instance
 timer = None
-TTSLEEP = 60 * 25
+TTSLEEP = 600
 
 # Dumping to storage
 def feeling_sleepy():
